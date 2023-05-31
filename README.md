@@ -15,3 +15,7 @@ Como rodar a aplicação
 #### Features
 - [ ] Envio de e-mail e mensagem no whatsapp
 - [ ] Cadastro de novos vonluntários
+
+#### Serviços de Email
+-[ ] Brevo: máximo de 300 emails por dia. Necessário criar conta para chave da API.
+-[ ] Sendgrid: máximo de 100 emails por dia. Necessário criar conta para chave da API.

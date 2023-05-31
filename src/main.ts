@@ -1,11 +1,17 @@
 import Express from 'express'
+import { errorHandler, notFound } from '../middlewares/error'
 import routes from './routes'
 
 const app = Express()
 const port = process.env.PORT || 3000
 
+
 app.use(Express.json())
 app.use(routes)
+
+//error handlers
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log('\n=====================')
