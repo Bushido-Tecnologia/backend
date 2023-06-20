@@ -8,7 +8,7 @@ const notFound = (req: Request, res: Response, next: NextFunction) => {
 };
 
 //Error handler
-const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+const errorHandler = (err: Error, req: Request, res: Response) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     res.status(statusCode);
     const stackErr = process.env.NODE_ENV === 'development' ? err.stack : null;

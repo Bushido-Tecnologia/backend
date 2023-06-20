@@ -1,0 +1,32 @@
+version: "2"
+
+services:
+  bushido-back:
+    container_name: bushido-back
+    image: bushido-back:develop
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+    environment:
+      - SENDGRID="sua chave do SendGrid"
+      - SENDINBLUE= "sua chave do SendInBlue"
+      - EMAIL="Email será disparado desse email"
+
+  bushido-back-db:
+    container_name: bushido-back-db
+    image: mongo
+    volumes:
+      - bushido-back-db:/date/db
+    ports:
+      - "24003:27017"
+
+volumes:
+  bushido-back-db:
+
+networks:
+  default:
+    name: bushido-back
