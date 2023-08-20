@@ -1,22 +1,18 @@
 import { NextFunction, Request, Response } from "express";
+import { logger } from "../../utils/logger";
 
 //Not found
 const notFound = (req: Request, res: Response, next: NextFunction) => {
-    const error = new Error(`Não achado - ${req.originalUrl}`);
-    res.status(404);
-    next(error);
+    res.status(404).json({ message: `Cannot found ${req.method} ${req.originalUrl}` })
 };
 
 //Error handler
 const errorHandler = (err: Error, req: Request, res: Response) => {
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    res.status(statusCode);
-    const stackErr = process.env.NODE_ENV === 'development' ? err.stack : null;
-    res.json({
+    res.status(400).json({
         message: err?.message,
-        stack: stackErr
     });
-    console.log("StackTrace: ", err?.stack)
+
+    logger.error(err?.message);
 };
 
-export { notFound, errorHandler };
+export { errorHandler, notFound };

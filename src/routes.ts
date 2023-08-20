@@ -1,8 +1,19 @@
-import { Router } from 'express'
-import { mailController } from './controllers/v1/EmailController';
+import 'express-async-errors';
+import { Express, Router } from 'express';
+import { errorHandler, notFound } from './controllers/middlewares/error';
+import { postRoute } from './controllers/v1/PostController';
+import { userRoute } from './controllers/v1/UserController';
+import { voluntaryRoute } from "./controllers/v1/VoluntaryController";
+import { newsLetterRoute } from './controllers/v1/NewsLetterController';
 
-const router = Router()
+export function bootstrapRoutes (app: Express): Router[] {
+    app.use(voluntaryRoute);
+    app.use(newsLetterRoute);
+    app.use(userRoute);
+    app.use(postRoute);
+    
+    app.use(notFound);
+    app.use(errorHandler);
 
-router.post('/api/v1/mail', mailController.sendMail);
-
-export default router
+    return [voluntaryRoute, userRoute, postRoute]
+}

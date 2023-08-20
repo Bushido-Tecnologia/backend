@@ -1,8 +1,8 @@
 import { MailService as MailServiceSendGrid } from "@sendgrid/mail";
 import Sib from "sib-api-v3-sdk";
 import { logger } from "../../utils/logger";
-import { IBrevoMessage, ISendGridMessage, IServicoDeEmail } from "../types/mail";
-
+import { IBrevoMessage, ISendGridMessage, IMailService } from "../types/mail";
+import { SENDGRID, EMAIL, SENDINBLUE, EMAILSERVICE } from "../../constants";
 
 class MailService {
   private apiKey: any
@@ -10,37 +10,37 @@ class MailService {
   private sendgridClient: MailServiceSendGrid;
 
   constructor () {
-    this.envSendGrid = process.env.SENDGRID
+    this.envSendGrid = SENDGRID
     this.sendgridClient = new MailServiceSendGrid();
     this.apiKey = Sib.ApiClient.instance.authentications['api-key']
 
-    console.log(this.apiKey , process.env.SENDGRID)
+    console.log(this.apiKey , SENDGRID)
     if (!this.apiKey || !this.envSendGrid) {
       logger.error("Ocorreu um erro ao inicializar o MailService, ausência de variáveis de ambiente")
     }
 
-    this.apiKey.apiKey = process.env.BREVO;
+    this.apiKey.apiKey = SENDINBLUE;
 
     this.sendgridClient.setApiKey(this.envSendGrid);
   }
 
-  public sendMail = async(mailPayload: IServicoDeEmail) => {
-    logger.info(process.env.EMAILSERVICE);
+  public sendMail = async(mailPayload: IMailService) => {
+    logger.info(EMAILSERVICE);
 
     const msgSendGrid: ISendGridMessage = {
-        from: process.env.EMAIL,
+        from: EMAIL,
         html: mailPayload.text,
         to: mailPayload.to,
         subject: mailPayload.subject,
         text: mailPayload.text
      }   
-    if (process.env.EMAILSERVICE === "SENDGRID") {
+    if (EMAILSERVICE === "SENDGRID") {
         
       await this.handleEmailSendGrid(msgSendGrid);
 
-    } else if (process.env.EMAILSERVICE === "BREVO"){
+    } else if (EMAILSERVICE === "BREVO"){
         const msgSendInBlue: IBrevoMessage = {
-            sender: process.env.EMAIL,
+            sender: EMAIL,
             htmlContent: mailPayload.html,
             to: mailPayload.to,
             subject: mailPayload.subject,
@@ -56,7 +56,7 @@ private handleEmailSendInBlue = (msg: IBrevoMessage) => {
   const tranEmailApi = new Sib.TransactionalEmailsApi();
   let sendSmtpEmail = new Sib.SendSmtpEmail();
   sendSmtpEmail = {
-      sender: { email: process.env.EMAIL },
+      sender: { email: EMAIL },
       to: [
         {
           email: msg.to,
