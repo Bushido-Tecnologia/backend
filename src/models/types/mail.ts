@@ -14,7 +14,7 @@ export interface IBrevoMessage {
     textContent: string;
 }
 
-export interface IServicoDeEmail {
+export interface IMailService {
     html: string;
     to: string;
     subject: string;

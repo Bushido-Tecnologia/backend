@@ -1,32 +1,36 @@
+import 'express-async-errors';
 import dotenv from "dotenv";
 import Express from 'express';
-import { errorHandler, notFound } from './controllers/middlewares/error';
-import routes from './routes';
+import mongoose from "mongoose";
+import { URL_DATABASE } from "./constants";
+import { bootstrapRoutes } from "./routes";
 import { handleLogRoutes, logger } from './utils/logger';
 
-dotenv.config();
-const app = Express()
-const port = process.env.PORT || 3000
+const bootStrap = async () =>{
+    dotenv.config();
+    const app = Express()
+    const port = process.env.PORT || 3000
+    app.use(Express.json())
 
+    //routes
+    const routes = bootstrapRoutes(app);
 
-app.use(Express.json())
-app.use(routes)
+    if (URL_DATABASE) {
+        await mongoose.connect(URL_DATABASE)
+    } else {
+        logger.error('URL_DATABASE not received')
+    }
 
-//error handlers
-app.use(notFound);
-app.use(errorHandler);
+    const handleShowInitialLogs = () =>{
+        console.log('\n=====================')
+        console.log('  Server is running  ')
+        console.log(`     on port ${port}   `)
+        console.log('=====================\n')
+        
+        handleLogRoutes(routes)
+    }
 
-app.listen(port, () => {
-    console.log('\n=====================')
-    console.log('  Server is running  ')
-    console.log(`     on port ${port}   `)
-    console.log('=====================\n')
+    app.listen(port, handleShowInitialLogs)
+}
 
-    logger.alert('alerta aqui')
-    logger.error('erro aqui')
-    logger.sucess('sucesso aqui')
-    logger.info('infor aqui')
-
-    handleLogRoutes(routes)
-})
-
+bootStrap()
