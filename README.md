@@ -45,14 +45,9 @@ Como rodar a aplicação
 
 - [ ] Brevo: máximo de 300 emails por dia. Necessário criar conta para chave da API. -[ ] Sendgrid: máximo de 100 emails por dia. Necessário criar conta para chave da API.
 
-```ts
-interface User {
-  name: string;
-  email: string;
-  // Criptografar senhar
-  password: string;
-  isAdmin: boolean;
-}
+#### TO-DO's
 
-interface Voluntary {}
-```
+- Testar mais
+- Melhorar as validações que está em utils/validations
+- Lidar e melhorar as mensagens de erro
+- Implementar o **mailService**
